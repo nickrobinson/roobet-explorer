@@ -29,9 +29,12 @@ async def hello():
         while True:
           data = await websocket.recv()
           if data[0] == 4:
-            logger.debug("Pot amount update (0x04)")
+            logger.debug(f"Pot amount update (0x04), hex: {data.hex()}")
           elif data[0] == 5:
-            logger.debug("User bet data (0x05)")
+            if data[2] == 36:
+              logger.debug("New bet data (0x05)")
+            else:
+              logger.debug("User cash out (0x05)")
           logger.info(f"< {data}")
 
 asyncio.get_event_loop().run_until_complete(hello())

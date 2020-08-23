@@ -1,9 +1,12 @@
 import asyncio
+from loguru import logger
 import pathlib
 import ssl
-import websockets
-import certifi
 
+import certifi
+import websockets
+
+logger.add("roobet.log", rotation="10 MB")
 
 ssl_context = ssl.create_default_context()
 ssl_context.load_verify_locations(certifi.where())
@@ -26,8 +29,9 @@ async def hello():
         while True:
           data = await websocket.recv()
           if data[0] == 4:
-            print(data[3])
-            print(data[4])
-          print(f"< {data}")
+            logger.debug("Pot amount update (0x04)")
+          elif data[0] == 5:
+            logger.debug("User bet data (0x05)")
+          logger.info(f"< {data}")
 
 asyncio.get_event_loop().run_until_complete(hello())

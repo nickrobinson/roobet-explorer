@@ -19,6 +19,7 @@ async def hello():
     ) as websocket:
         data = await websocket.recv()
         print(f"< {data}")
+        # Required setup messages
         await websocket.send(bytes.fromhex('02'))
         await websocket.send(bytes.fromhex('32'))
 
